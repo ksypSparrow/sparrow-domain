@@ -8,6 +8,30 @@ Pre-1.0, **the minor is the breaking bump**. Dependents pin with
 
 ## [Unreleased]
 
+## [0.3.0] — wave 2 · notebook writes
+
+Describing a change to a notebook, without performing one. Nothing here touches
+storage; that is cold-storage 0.3.0.
+
+### Added
+
+- `NotebookDraft` — `name`, `parentID`, `colorName`.
+- `NotebookEdit` — every field optional, `nil` meaning *leave unchanged*.
+- `Notebook.applying(_:at:)` — pure edit semantics.
+
+### Notes
+
+- ⚠️ **The nullable fields are doubly optional.** A single optional cannot
+  distinguish *leave the parent alone* from *move this to the top level*.
+  `nil` leaves, `.some(nil)` clears, `.some(id)` sets.
+- **An empty edit returns the notebook completely unchanged, `updatedAt`
+  included.** A bumped timestamp on an empty save would look like a real change
+  to the sync journal, and V2 would ship a row across the network to say
+  nothing happened.
+- `NotebookDraft` has no `sortIndex`. Where a new notebook lands among its
+  siblings depends on how many there already are, which a caller creating one
+  from a Shortcut cannot know. Storage assigns it.
+
 ## [0.2.0] — wave 1 · notebook
 
 A place to put notes. Nothing about `Note` changes in this release; the two are
