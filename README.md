@@ -31,6 +31,7 @@ creating a cycle.
 |---|---|
 | `NoteID` · `Note` · `NoteDraft` | 0.1.0 |
 | `NotebookID` · `Notebook` | 0.2.0 |
+| `NotebookDraft` · `NotebookEdit` | 0.3.0 |
 
 ## Rules
 
