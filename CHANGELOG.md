@@ -8,6 +8,27 @@ Pre-1.0, **the minor is the breaking bump**. Dependents pin with
 
 ## [Unreleased]
 
+## [0.2.0] — wave 1 · notebook
+
+A place to put notes. Nothing about `Note` changes in this release; the two are
+linked in 0.4.0, when `Note` gains `notebookID`.
+
+### Added
+
+- `NotebookID` — a distinct type from `NoteID`, so one cannot be passed where
+  the other belongs.
+- `Notebook` — `id`, `name`, `parentID`, `colorName`, `sortIndex`,
+  `createdAt`, `updatedAt`, plus `isTopLevel` and a sibling ordering.
+
+### Notes
+
+- **`parentID` ships with the first notebook release, not later.** The
+  `.notes.folder` schema requires nesting, and adding the field afterwards
+  would be a breaking change to a type two repositories store.
+- `colorName` is a palette name (`"riverbank"`), never a colour value. The
+  domain stays free of anything platform-specific, and the palette can change
+  without a migration.
+
 ## [0.1.0] — wave 0 · walking skeleton
 
 The first release. Enough of a note to prove the pipeline end to end, and
