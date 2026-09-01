@@ -8,6 +8,38 @@ Pre-1.0, **the minor is the breaking bump**. Dependents pin with
 
 ## [Unreleased]
 
+## [0.5.0] — wave 5 · query types
+
+The types that keep SQL out of the service layer.
+
+### Added
+
+- `NoteFilter` — `text`, `notebookID`, `kinds`, `createdWithin`,
+  `updatedWithin`, `isPinned`; `.all` for the empty filter.
+- `NoteSort` — `Field` (updated · created · observed · title) and `Order`,
+  plus `.mostRecent` and `orders(_:before:)`.
+
+### Notes
+
+- **`NoteFilter.matchesFields(of:)`, not `matches`.** It answers every field
+  **except `text`**, and is named so nobody expects otherwise. Free text is the
+  search index's business — a second, subtly different text matcher is exactly
+  the bug that made the in-memory store disagree with SQLite about `"Herón"`
+  in wave 4.
+- It exists so there is **one** definition of the structural fields: an
+  in-memory store can use it directly, and a SQL compiler can be checked
+  against it rather than against another hand-written matcher.
+- `requiresTextSearch` lets storage decide whether to consult FTS at all.
+- **An empty `kinds` set means *any* kind**, not *no kinds*. The other reading
+  would make `.all` match nothing, which is the opposite of what it says.
+- `NoteSort.orders(_:before:)` breaks ties on identifier. Two notes saved in
+  the same second sort arbitrarily without it, and a list that reshuffles
+  between reads looks like a bug in whatever drew it.
+
+### Deferred
+
+`NoteFilter.tagIDs` waits for `TagID` in 0.6.0.
+
 ## [0.4.0] — wave 3 · the note, complete
 
 The largest release here. Notes gain everything they need, and rich text
