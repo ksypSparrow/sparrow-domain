@@ -8,6 +8,53 @@ Pre-1.0, **the minor is the breaking bump**. Dependents pin with
 
 ## [Unreleased]
 
+## [0.4.0] — wave 3 · the note, complete
+
+The largest release here. Notes gain everything they need, and rich text
+arrives — in a shape that actually compiles for the V2 server.
+
+### Changed — breaking
+
+- **`Note.title` and `body` are now `RichText`**, not `String`.
+- `Note` gains `notebookID`, `kind`, `isPinned`, `observedAt`. `notebookID` is
+  required, so `Note.init` now needs one.
+
+### Added
+
+- `RichText` — `plain: String` plus an opaque `attributes: Data?`.
+- `NoteKind` — `observation` · `sketch` · `voice` · `daily`.
+- `NoteDraft` full shape; `NoteEdit` with `observedAt: Date??`.
+- `Note.applying(_:at:)`, `plainTitle`, `plainBody`, `happenedAt`.
+
+### Why `RichText` is not `AttributedString`
+
+🧪 **Verified on Swift 6.1.3 and 6.2.4 for Linux:** `AttributedString` exists
+but has **no `Codable` conformance**, and the presentation-intent attributes
+are absent. A `Note` whose fields were `AttributedString` would not compile for
+the server at all — not "would round-trip differently", *would not build*.
+
+This closes open question Q1, four waves before the plan expected an answer.
+The design's own stated fallback was "the server treats rich text as opaque
+`Data` and never re-encodes it", and that is exactly this shape:
+
+```
+   plain       the characters. Always present, on every platform.
+   attributes  Apple's encoding of the runs. Opaque elsewhere.
+```
+
+🧪 `SparrowDomain` now compiles on Linux (Swift 6.2, module-level) — the first
+time that promise has been tested rather than asserted.
+
+### Notes
+
+- Unattributed text stores no blob. Most notes are plain.
+- Unreadable attributes fall back to plain text and never throw. Losing
+  formatting is a visual regression; losing the note is not something a corrupt
+  blob should be able to cause.
+- A blob whose characters disagree with `plain` is rejected — trusting it would
+  show a person another note's words.
+- `NoteKind` raw values are persisted. Renaming a case is a data migration.
+
 ## [0.3.0] — wave 2 · notebook writes
 
 Describing a change to a notebook, without performing one. Nothing here touches
