@@ -16,6 +16,12 @@ public struct Note: Identifiable, Hashable, Sendable, Codable {
     public var body: RichText
 
     public var notebookID: NotebookID
+
+    /// An array, not a set: the order a person added tags is the order they
+    /// should see them. Uniqueness is the writer's job — the service dedupes
+    /// before saving.
+    public var tagIDs: [TagID]
+
     public var kind: NoteKind
     public var isPinned: Bool
 
@@ -31,6 +37,7 @@ public struct Note: Identifiable, Hashable, Sendable, Codable {
         title: RichText = .empty,
         body: RichText = .empty,
         notebookID: NotebookID,
+        tagIDs: [TagID] = [],
         kind: NoteKind = .observation,
         isPinned: Bool = false,
         observedAt: Date? = nil,
@@ -41,6 +48,7 @@ public struct Note: Identifiable, Hashable, Sendable, Codable {
         self.title = title
         self.body = body
         self.notebookID = notebookID
+        self.tagIDs = tagIDs
         self.kind = kind
         self.isPinned = isPinned
         self.observedAt = observedAt
