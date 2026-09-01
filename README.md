@@ -34,6 +34,7 @@ creating a cycle.
 | `NotebookDraft` · `NotebookEdit` | 0.3.0 |
 | `RichText` · `NoteKind` · `NoteEdit` | 0.4.0 |
 | `NoteFilter` · `NoteSort` | 0.5.0 |
+| `TagID` · `Tag` | 0.6.0 |
 
 ## Rules
 

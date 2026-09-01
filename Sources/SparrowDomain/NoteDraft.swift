@@ -13,6 +13,7 @@ public struct NoteDraft: Hashable, Sendable, Codable {
     /// without naming one, and storage always has somewhere to put it.
     public var notebookID: NotebookID?
 
+    public var tagIDs: [TagID]
     public var kind: NoteKind
     public var observedAt: Date?
 
@@ -20,12 +21,14 @@ public struct NoteDraft: Hashable, Sendable, Codable {
         title: RichText = .empty,
         body: RichText = .empty,
         notebookID: NotebookID? = nil,
+        tagIDs: [TagID] = [],
         kind: NoteKind = .observation,
         observedAt: Date? = nil
     ) {
         self.title = title
         self.body = body
         self.notebookID = notebookID
+        self.tagIDs = tagIDs
         self.kind = kind
         self.observedAt = observedAt
     }

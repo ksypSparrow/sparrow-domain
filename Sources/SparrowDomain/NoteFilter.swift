@@ -12,6 +12,11 @@ public struct NoteFilter: Hashable, Sendable, Codable {
     public var notebookID: NotebookID?
     /// Empty means *any kind*, not *no kinds*.
     public var kinds: Set<NoteKind>
+
+    /// Empty means *any tags*. A non-empty set requires the note to carry
+    /// **all** of them — "tagged wetlands and survey" is the useful question,
+    /// and "either" is expressible as two searches.
+    public var tagIDs: Set<TagID>
     public var createdWithin: DateInterval?
     public var updatedWithin: DateInterval?
     public var isPinned: Bool?
@@ -20,6 +25,7 @@ public struct NoteFilter: Hashable, Sendable, Codable {
         text: String? = nil,
         notebookID: NotebookID? = nil,
         kinds: Set<NoteKind> = [],
+        tagIDs: Set<TagID> = [],
         createdWithin: DateInterval? = nil,
         updatedWithin: DateInterval? = nil,
         isPinned: Bool? = nil
@@ -27,6 +33,7 @@ public struct NoteFilter: Hashable, Sendable, Codable {
         self.text = text
         self.notebookID = notebookID
         self.kinds = kinds
+        self.tagIDs = tagIDs
         self.createdWithin = createdWithin
         self.updatedWithin = updatedWithin
         self.isPinned = isPinned
@@ -63,6 +70,9 @@ public extension NoteFilter {
     func matchesFields(of note: Note) -> Bool {
         if let notebookID, note.notebookID != notebookID { return false }
         if !kinds.isEmpty, !kinds.contains(note.kind) { return false }
+        if !tagIDs.isEmpty, !tagIDs.isSubset(of: Set(note.tagIDs)) {
+            return false
+        }
         if let isPinned, note.isPinned != isPinned { return false }
         if let createdWithin, !createdWithin.contains(note.createdAt) {
             return false

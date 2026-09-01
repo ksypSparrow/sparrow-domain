@@ -8,6 +8,42 @@ Pre-1.0, **the minor is the breaking bump**. Dependents pin with
 
 ## [Unreleased]
 
+## [0.6.0] — wave 6 · tags
+
+### Added
+
+- `TagID` — slug-backed, derived from a label.
+- `Tag` — `id` and the label as typed.
+- `Note.tagIDs`, and tag support on `NoteDraft`, `NoteEdit` and `NoteFilter`.
+  **This closes the last deferral in the plan** (`NoteFilter.tagIDs`).
+
+### Changed — breaking
+
+`Note.init`, `NoteDraft.init` and `NoteEdit.init` gain a `tagIDs` parameter.
+Both default to empty, so most call sites are unaffected.
+
+### Notes
+
+- ⚠️ **`TagID.init(normalizing:)` is failable**, unlike the sketch in
+  `contracts.md`. A label with no letters or digits — `"!!!"`, `"🐦"`, `"   "` —
+  has no slug, and a non-failable initialiser would have to invent one or
+  return something unusable. Both push validation into every caller, which is
+  the argument that made `defaultNotebook()` non-optional.
+- **Validity is defined as *normalising it changes nothing*.** One definition
+  rather than two: there is no separate list of legal characters that could
+  drift from what normalisation produces. `normalizing` is idempotent, and a
+  test asserts it.
+- **Diacritics fold the way the search index folds them.** A note tagged
+  `"Herón"` is reachable by someone typing `"heron"`; without this the two
+  halves of the app would disagree about the same word.
+- `Note.tagIDs` is an **array**, not a set — the order a person added tags is
+  the order they should see them. Uniqueness is the writer's job.
+- `NoteEdit.tagIDs` **replaces** the whole set. Merging inside `applying` would
+  make the same edit produce different results depending on what it was applied
+  to, which is not what "describe the change" means.
+- `NoteFilter.tagIDs` requires **every** tag it names. "Either" is expressible
+  as two searches; "both" is not expressible any other way.
+
 ## [0.5.0] — wave 5 · query types
 
 The types that keep SQL out of the service layer.

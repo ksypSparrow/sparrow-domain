@@ -15,6 +15,13 @@ public struct NoteEdit: Hashable, Sendable {
     public var title: RichText?
     public var body: RichText?
     public var notebookID: NotebookID?
+
+    /// The whole set, replaced. There is no "add one tag" here — an edit
+    /// describes the state it wants, and a caller that means "add" reads the
+    /// current tags first. Merging inside `applying` would make the same edit
+    /// produce different results depending on what it was applied to.
+    public var tagIDs: [TagID]?
+
     public var kind: NoteKind?
     public var isPinned: Bool?
     public var observedAt: Date??
@@ -23,6 +30,7 @@ public struct NoteEdit: Hashable, Sendable {
         title: RichText? = nil,
         body: RichText? = nil,
         notebookID: NotebookID? = nil,
+        tagIDs: [TagID]? = nil,
         kind: NoteKind? = nil,
         isPinned: Bool? = nil,
         observedAt: Date?? = nil
@@ -30,6 +38,7 @@ public struct NoteEdit: Hashable, Sendable {
         self.title = title
         self.body = body
         self.notebookID = notebookID
+        self.tagIDs = tagIDs
         self.kind = kind
         self.isPinned = isPinned
         self.observedAt = observedAt
@@ -39,8 +48,8 @@ public struct NoteEdit: Hashable, Sendable {
 public extension NoteEdit {
     /// An edit that names no fields at all.
     var isEmpty: Bool {
-        title == nil && body == nil && notebookID == nil && kind == nil
-            && isPinned == nil && observedAt == nil
+        title == nil && body == nil && notebookID == nil && tagIDs == nil
+            && kind == nil && isPinned == nil && observedAt == nil
     }
 }
 
@@ -58,6 +67,7 @@ public extension Note {
         if let title = edit.title { updated.title = title }
         if let body = edit.body { updated.body = body }
         if let notebookID = edit.notebookID { updated.notebookID = notebookID }
+        if let tagIDs = edit.tagIDs { updated.tagIDs = tagIDs }
         if let kind = edit.kind { updated.kind = kind }
         if let isPinned = edit.isPinned { updated.isPinned = isPinned }
         if let observedAt = edit.observedAt { updated.observedAt = observedAt }
