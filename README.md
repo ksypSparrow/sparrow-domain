@@ -33,6 +33,7 @@ creating a cycle.
 | `NotebookID` · `Notebook` | 0.2.0 |
 | `NotebookDraft` · `NotebookEdit` | 0.3.0 |
 | `RichText` · `NoteKind` · `NoteEdit` | 0.4.0 |
+| `NoteFilter` · `NoteSort` | 0.5.0 |
 
 ## Rules
 
