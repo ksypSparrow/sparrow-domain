@@ -15,6 +15,14 @@ import Foundation
 /// Ugly at the declaration, correct at the call site — and the alternative is
 /// a separate `clearsParent: Bool` for every nullable field, which is the same
 /// information with more ways to contradict itself.
+/// ⚠️ **Deliberately not `Codable`.** The doubly-optional fields do not
+/// survive JSON: `.some(nil)` encodes as `null` and decodes back as `nil`, so
+/// "clear this field" would silently become "leave it alone". 🧪 Verified on
+/// Swift 6.4.
+///
+/// Nothing needs to encode an edit — the journal carries the *resulting*
+/// entity, not the instruction that produced it — so the conformance is
+/// omitted rather than papered over with a custom coder.
 public struct NotebookEdit: Hashable, Sendable {
     public var name: String?
     public var parentID: NotebookID??

@@ -1,8 +1,11 @@
 import Foundation
 
 /// How a list of notes is ordered.
-public struct NoteSort: Hashable, Sendable {
-    public enum Field: String, Hashable, Sendable, CaseIterable {
+///
+/// `Codable`, because `NoteFilter` is: a saved search is a filter *and* a sort,
+/// and storing one without the other would be half a saved search.
+public struct NoteSort: Hashable, Sendable, Codable {
+    public enum Field: String, Hashable, Sendable, Codable, CaseIterable {
         case updated
         case created
         /// When the observation happened, falling back to creation for notes
@@ -11,7 +14,7 @@ public struct NoteSort: Hashable, Sendable {
         case title
     }
 
-    public enum Order: String, Hashable, Sendable, CaseIterable {
+    public enum Order: String, Hashable, Sendable, Codable, CaseIterable {
         case ascending
         case descending
     }

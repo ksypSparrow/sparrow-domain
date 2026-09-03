@@ -11,6 +11,14 @@ import Foundation
 ///    observedAt = .some(nil)   clear it — this note is not about a moment
 ///    observedAt = .some(date)  set it
 /// ```
+/// ⚠️ **Deliberately not `Codable`.** The doubly-optional fields do not
+/// survive JSON: `.some(nil)` encodes as `null` and decodes back as `nil`, so
+/// "clear this field" would silently become "leave it alone". 🧪 Verified on
+/// Swift 6.4.
+///
+/// Nothing needs to encode an edit — the journal carries the *resulting*
+/// entity, not the instruction that produced it — so the conformance is
+/// omitted rather than papered over with a custom coder.
 public struct NoteEdit: Hashable, Sendable {
     public var title: RichText?
     public var body: RichText?
