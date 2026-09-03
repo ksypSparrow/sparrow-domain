@@ -5,6 +5,17 @@ import Foundation
 /// `Codable`, because `NoteFilter` is: a saved search is a filter *and* a sort,
 /// and storing one without the other would be half a saved search.
 public struct NoteSort: Hashable, Sendable, Codable {
+    /// ⚠️ `@frozen`: this set is closed, and adding a case is a **major** version
+    /// bump rather than something consumers absorb silently.
+    ///
+    /// Without it, a consumer built against the resilient binary gets
+    /// `@unknown default` instead of an exhaustiveness error — so a new case
+    /// arrives at runtime as whatever that default picked. Two switches were
+    /// already degraded that way: `ColdStorage.FilterCompiler.orderClause`, whose
+    /// fallback silently disagrees with `NoteSort.orders(_:before:)`, and
+    /// `NoteEntity`'s kind mapping, whose comment promised a compile error it no
+    /// longer produced.
+    @frozen
     public enum Field: String, Hashable, Sendable, Codable, CaseIterable {
         case updated
         case created
@@ -14,6 +25,7 @@ public struct NoteSort: Hashable, Sendable, Codable {
         case title
     }
 
+    @frozen
     public enum Order: String, Hashable, Sendable, Codable, CaseIterable {
         case ascending
         case descending
